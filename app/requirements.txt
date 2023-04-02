@@ -1,0 +1,22 @@
+# FastAPI
+fastapi==0.82.0
+uvicorn==0.18.3
+# Lambda×FastAPI
+mangum==0.15.1
+# DI(依存性注入)
+injector==0.20.1
+di4injector==0.0.1
+# Selenium
+selenium==4.8.3
+webdriver-manager==3.8.5
+# BeautifulSoup
+beautifulsoup4==4.11.1
+lxml==4.9.1
+# ログ出力
+slf4py==0.0.2
+# キャッシュ
+cachetools==5.2.0
+# DynamoDB
+pynamodb==5.2.1
+# ドメイン
+tldextract==3.3.1
