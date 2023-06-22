@@ -30,6 +30,7 @@ class ErrorCode(Enum):
     DB_CAN_NOT_CONNECT_TO_DATABASE = ('データベースへの接続に失敗しました。', ErrorLevel.CRITICAL, HTTPStatus.INTERNAL_SERVER_ERROR)
     DB_CLIENT_ERROR = ('クライアントエラーが発生しました。', ErrorLevel.ERROR, HTTPStatus.INTERNAL_SERVER_ERROR)
     DB_TIME_OUT = ('タイムアウトが発生しました。', ErrorLevel.WARN, HTTPStatus.INTERNAL_SERVER_ERROR)
+    PAGE_TIMEOUT = ('ブラウザアクセスがタイムアウトしました。', ErrorLevel.ERROR, HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def __init__(self, message: str, error_level: ErrorLevel, http_status: HTTPStatus):
         self.message = message

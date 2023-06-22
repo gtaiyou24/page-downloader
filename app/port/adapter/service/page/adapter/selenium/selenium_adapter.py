@@ -3,7 +3,7 @@ from typing import Optional, NoReturn
 
 import requests
 from selenium import webdriver
-from selenium.common import JavascriptException
+from selenium.common import JavascriptException, TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service as ChromiumService
 from selenium.webdriver.common.by import By
@@ -17,6 +17,7 @@ from domain.model.device import Device
 from domain.model.page import Page, HttpStatus
 from domain.model.page.html import CharacterCode, HTML
 from domain.model.url import URL
+from exception import SystemException, ErrorCode
 from port.adapter.service.page.adapter import PageAdapter
 from port.adapter.service.page.adapter.selenium import ChromeBuilder
 
@@ -29,13 +30,15 @@ class SeleniumAdapter(PageAdapter):
     def download(self, url: URL, device: Device, cookies: Optional[Cookies], wait: Optional[int]) -> Page:
         web_driver = self.__builder.device(device).build()
 
-        web_driver.get(url.value)
-
         if cookies:
             for cookie in cookies.cookie_set:
                 web_driver.add_cookie({
                     'name': cookie.name, 'value': cookie.value, 'domain': cookie.domain, 'path': cookie.path})
+
+        try:
             web_driver.get(url.value)
+        except TimeoutException:
+            raise SystemException(ErrorCode.PAGE_TIMEOUT, 'page {} timeout.'.format(url.value))
 
         # 最下部までスクロールする
         self.__scroll_to_bottom(web_driver)
