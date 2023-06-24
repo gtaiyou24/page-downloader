@@ -5,7 +5,7 @@ services:
   api:
     build:
       context: ./app
-      dockerfile: Dockerfile.api
+      dockerfile: Dockerfile.local
     container_name: page-downloader-api
     environment:
       - DI_PROFILE_ACTIVES=InMem
