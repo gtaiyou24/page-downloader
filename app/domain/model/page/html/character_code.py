@@ -14,7 +14,7 @@ class CharacterCode(Enum):
             return CharacterCode.UTF_8
         elif (char_code == "ascii") or (char_code == "ascii"):
             return CharacterCode.ASCII
-        elif (char_code == "SHIFT-JIS") or (char_code == "shift-jis"):
+        elif (char_code == "SHIFT-JIS") or (char_code == 'SHIFT_JIS') or (char_code == "shift-jis"):
             return CharacterCode.SHIFT_JIS
         elif (char_code == "EUC-JP") or (char_code == "euc-jp"):
             return CharacterCode.EUC_JP

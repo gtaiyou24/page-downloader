@@ -36,6 +36,7 @@ class SeleniumAdapter(PageAdapter):
                     'name': cookie.name, 'value': cookie.value, 'domain': cookie.domain, 'path': cookie.path})
 
         try:
+            web_driver.implicitly_wait(wait if wait else 30)
             web_driver.get(url.value)
         except TimeoutException:
             raise SystemException(ErrorCode.PAGE_TIMEOUT, 'page {} timeout.'.format(url.value))
@@ -50,13 +51,18 @@ class SeleniumAdapter(PageAdapter):
         if wait:
             time.sleep(wait)
 
-        response = requests.get(web_driver.current_url)
-        http_status = HttpStatus.value_of(response.status_code)
-        return Page(
-            URL(web_driver.current_url),
-            http_status,
-            HTML(web_driver.page_source, CharacterCode.value_of(response.apparent_encoding))
+        url = URL(web_driver.current_url)
+        response = requests.get(
+            url.value,
+            headers={'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) '
+                                   'AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBDV/iPhone9'
+                                   ',1;FBMD/iPhone;FBSN/iOS;FBSV/13.3.1;FBSS/2;FBID/phone;FBLC/en_US;FBOP/5;FBCR/]'}
         )
+        html = HTML(web_driver.page_source, CharacterCode.value_of(response.apparent_encoding))
+
+        web_driver.quit()
+
+        return Page(url, HttpStatus.value_of(response.status_code), html)
 
     @staticmethod
     def __scroll_to_bottom(web_driver) -> NoReturn:
