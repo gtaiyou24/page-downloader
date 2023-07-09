@@ -55,6 +55,10 @@ class ChromeBuilder:
 
     def build(self) -> webdriver.Chrome:
         driver = webdriver.Chrome(executable_path='/tmp/bin/chromedriver', options=self.__options)
+
+        # web driverによるアクセスを検知し、拒否するサイトがあるので「navigator.webdriver=true」とならないようにする
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
         atexit.register(driver.quit)
         atexit.register(self.__remove_unnecessary_file)
         return driver
