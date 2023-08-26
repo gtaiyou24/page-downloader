@@ -1,0 +1,38 @@
+name: Deploy to production
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+#      - name: Push Selenium Chrome Driver Image to Amazon ECR
+#        run: |
+#          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w6o9e0h0
+#          docker build -t selenium-chrome-driver:latest app/. -f ./app/Dockerfile.aws.lambda.layer
+#          docker tag selenium-chrome-driver:latest public.ecr.aws/w6o9e0h0/selenium-chrome-driver:latest
+#          docker push public.ecr.aws/w6o9e0h0/selenium-chrome-driver:latest
+      - name: Push Docker Image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/page-downloader:latest app/. -f ./app/Dockerfile.aws.lambda
+          docker push $ECR_REGISTRY/page-downloader:latest
+      - name: Deploy Lambda
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: aws lambda update-function-code --function-name page-downloader --image-uri $ECR_REGISTRY/web-page-downloader:latest

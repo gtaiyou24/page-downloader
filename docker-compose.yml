@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+  # API
+  api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.local
+    container_name: page-downloader-api
+    environment:
+      - DI_PROFILE_ACTIVES=InMem
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - ./app:/app/
+    ports:
+      - "8000:8000"
+    command: uvicorn start_app:app --host 0.0.0.0 --reload
+
+  # Amazon Lambda
+  lambda:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.aws.lambda
+    container_name: page-downloader-lambda
+    environment:
+      - DI_PROFILE_ACTIVES=InMem
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - ./app:/var/task
+      - $HOME/.aws:/root/.aws
+    ports:
+      - "9000:8080"
