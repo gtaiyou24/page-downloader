@@ -35,4 +35,4 @@ jobs:
       - name: Deploy Lambda
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: aws lambda update-function-code --function-name page-downloader --image-uri $ECR_REGISTRY/web-page-downloader:latest
+        run: aws lambda update-function-code --function-name page-downloader --image-uri $ECR_REGISTRY/lambda-page-downloader:latest
