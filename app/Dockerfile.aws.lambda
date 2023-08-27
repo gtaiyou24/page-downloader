@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.8 as build
+FROM public.ecr.aws/lambda/python:3.11 as build
 
 # serverlesss-chromeとchromedriverのバージョンを合わせる
 # NOTE : https://github.com/adieuadieu/serverless-chrome/releases
@@ -8,7 +8,7 @@ RUN yum install -y unzip && \
     unzip /tmp/chromedriver.zip -d /opt/ && \
     unzip /tmp/headless-chromium.zip -d /opt/
 
-FROM public.ecr.aws/lambda/python:3.8
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.11
 
 ENV TZ=Asia/Tokyo
 
