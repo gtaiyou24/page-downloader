@@ -4,7 +4,6 @@ import atexit
 import os
 import shutil
 
-import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromiumService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -55,10 +54,7 @@ class ChromeBuilder:
         return self
 
     def build(self) -> webdriver.Chrome:
-        options = uc.ChromeOptions()
-        options.binary_location = '/tmp/bin/headless-chromium'
-        driver = uc.Chrome(options=options, driver_executable_path='/tmp/bin/chromedriver', headless=True)
-        # driver = webdriver.Chrome(options=self.__options, service=ChromiumService(executable_path='/tmp/bin/chromedriver'))
+        driver = webdriver.Chrome(options=self.__options, service=ChromiumService(executable_path='/tmp/bin/chromedriver'))
 
         # web driverによるアクセスを検知し、拒否するサイトがあるので「navigator.webdriver=true」とならないようにする
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")

@@ -8,7 +8,6 @@ injector==0.20.1
 di4injector==0.0.1
 # Selenium
 selenium==4.10.0
-undetected-chromedriver==3.5.3
 webdriver-manager==3.8.6
 # BeautifulSoup
 beautifulsoup4==4.12.2
