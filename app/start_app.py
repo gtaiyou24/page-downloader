@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from mangum import Mangum
 
@@ -7,7 +9,7 @@ from port.adapter.resource.cookie import cookie_resource
 from port.adapter.resource.health import health_resource
 from port.adapter.resource.page import page_resource
 
-app = FastAPI(title="Page Downloader")
+app = FastAPI(title="Page Downloader", root_path=os.getenv('OPENAPI_PREFIX'))
 
 app.add_exception_handler(SystemException, exception_handlers.system_exception_handler)
 
